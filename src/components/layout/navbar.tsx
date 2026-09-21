@@ -12,7 +12,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { navLinks } from "@/lib/data";
 import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -53,31 +53,27 @@ export function Navbar() {
             <ul className="hidden items-center gap-8 md:flex">
               {navLinks.map(link => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                  >
+                  <Button href={link.href} variant="navigation" size="sm">
                     {link.label}
-                  </Link>
+                  </Button>
                 </li>
               ))}
             </ul>
 
             <div className="hidden md:block">
-              <Button href="/contact" size="sm">
+              <Button href="/contact" size="sm" variant={"arrow"}>
                 Get Started
               </Button>
             </div>
 
-            <button
-              type="button"
-              className="flex size-10 items-center justify-center rounded-full text-foreground md:hidden"
+            <IconButton
+              className="md:hidden"
               aria-label="Open menu"
               aria-expanded={isMobileOpen}
               onClick={() => setIsMobileOpen(true)}
             >
               <Menu className="size-6" aria-hidden="true" />
-            </button>
+            </IconButton>
           </nav>
         </Container>
       </header>
@@ -105,14 +101,14 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
     >
       <Container className="flex items-center justify-between py-6">
         <span className="text-lg font-semibold">SkillBridge</span>
-        <button
-          type="button"
-          className="flex size-11 items-center justify-center rounded-full bg-white/10 text-white"
+        <IconButton
+          variant="ghost"
+          className="text-white hover:bg-white/10 hover:text-white"
           aria-label="Close menu"
           onClick={onClose}
         >
           <X className="size-6" aria-hidden="true" />
-        </button>
+        </IconButton>
       </Container>
 
       <motion.ul

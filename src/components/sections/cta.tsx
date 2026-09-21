@@ -41,6 +41,7 @@ export function CTA() {
               variant="light"
               size="lg"
               showArrow
+              magnetic
             >
               Talk to an Advisor
             </Button>

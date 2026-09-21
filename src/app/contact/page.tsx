@@ -2,6 +2,7 @@ import { FAQ } from "@/components/sections/faq";
 import { CTA } from "@/components/sections/cta";
 import { PageShell } from "@/components/layout/page-shell";
 import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "Contact",
@@ -37,12 +38,9 @@ export default function ContactPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               We typically respond within one business day.
             </p>
-            <a
-              href="mailto:hello@skillbridge.example"
-              className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-            >
+            <Button href="mailto:hello@skillbridge.example" className="mt-6">
               Send an email
-            </a>
+            </Button>
           </div>
         </Container>
       </section>

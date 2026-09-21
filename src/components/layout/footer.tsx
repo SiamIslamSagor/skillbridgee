@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { footerLinks, socialLinks } from "@/lib/data";
 import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
 
 export function Footer() {
   const [subscribed, setSubscribed] = useState(false);
@@ -74,12 +75,9 @@ export function Footer() {
                 placeholder="you@example.com"
                 className="h-11 w-full min-w-0 rounded-full border border-white/15 bg-white/5 px-4 text-sm text-white placeholder:text-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
-              <button
-                type="submit"
-                className="flex h-11 shrink-0 items-center justify-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              >
+              <Button type="submit" size="sm" className="shrink-0">
                 Subscribe
-              </button>
+              </Button>
             </form>
             {subscribed ? (
               <p className="text-xs text-primary/80">

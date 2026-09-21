@@ -6,6 +6,7 @@ import { useState } from "react";
 import { testimonials } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { IconButton } from "@/components/ui/button";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -74,14 +75,14 @@ export function Testimonials() {
           </div>
 
           <div className="mt-10 flex items-center justify-center gap-4">
-            <button
-              type="button"
+            <IconButton
+              variant="outline"
               onClick={() => goTo(index - 1)}
               aria-label="Previous testimonial"
-              className="flex size-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white"
+              className="size-10 border-white/15 text-white/70 hover:border-white/30 hover:bg-white/5 hover:text-white"
             >
               <ChevronLeft className="size-4" aria-hidden="true" />
-            </button>
+            </IconButton>
 
             <div className="flex items-center gap-2">
               {testimonials.map((testimonial, dotIndex) => (
@@ -100,14 +101,14 @@ export function Testimonials() {
               ))}
             </div>
 
-            <button
-              type="button"
+            <IconButton
+              variant="outline"
               onClick={() => goTo(index + 1)}
               aria-label="Next testimonial"
-              className="flex size-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white"
+              className="size-10 border-white/15 text-white/70 hover:border-white/30 hover:bg-white/5 hover:text-white"
             >
               <ChevronRight className="size-4" aria-hidden="true" />
-            </button>
+            </IconButton>
           </div>
         </div>
       </Container>
