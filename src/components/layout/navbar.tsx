@@ -64,7 +64,7 @@ export function Navbar() {
             </ul>
 
             <div className="hidden md:block">
-              <Button href="#contact" size="sm">
+              <Button href="/contact" size="sm">
                 Get Started
               </Button>
             </div>
@@ -151,7 +151,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
 
       <Container className="pb-10">
         <Button
-          href="#contact"
+          href="/contact"
           variant="light"
           size="lg"
           className="w-full"

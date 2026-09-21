@@ -1,9 +1,9 @@
 export const navLinks = [
-  { label: "Programs", href: "#programs" },
-  { label: "About", href: "#why-skillbridge" },
-  { label: "Instructors", href: "#instructors" },
-  { label: "Success Stories", href: "#success-stories" },
-  { label: "Contact", href: "#contact" },
+  { label: "Programs", href: "/programs" },
+  { label: "About", href: "/about" },
+  { label: "Instructors", href: "/instructors" },
+  { label: "Success Stories", href: "/success-stories" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const trustStats = [
@@ -241,19 +241,19 @@ export const faqs = [
 
 export const footerLinks = {
   programs: [
-    { label: "Web Development", href: "#programs" },
-    { label: "UI/UX Design", href: "#programs" },
-    { label: "Digital Marketing", href: "#programs" },
-    { label: "Data Analytics", href: "#programs" },
+    { label: "Web Development", href: "/programs/web-development" },
+    { label: "UI/UX Design", href: "/programs/ui-ux-design" },
+    { label: "Digital Marketing", href: "/programs/digital-marketing" },
+    { label: "Data Analytics", href: "/programs/data-analytics" },
   ],
   resources: [
-    { label: "Success Stories", href: "#success-stories" },
-    { label: "Instructors", href: "#instructors" },
-    { label: "FAQ", href: "#faq" },
-    { label: "Contact", href: "#contact" },
+    { label: "Success Stories", href: "/success-stories" },
+    { label: "Instructors", href: "/instructors" },
+    { label: "FAQ", href: "/contact#faq" },
+    { label: "Contact", href: "/contact" },
   ],
   company: [
-    { label: "About SkillBridge", href: "#why-skillbridge" },
+    { label: "About SkillBridge", href: "/about" },
     { label: "Careers", href: "#" },
     { label: "Partnerships", href: "#" },
   ],

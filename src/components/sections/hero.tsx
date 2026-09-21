@@ -93,10 +93,10 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.24, ease: EASE }}
             className="flex flex-wrap items-center gap-4"
           >
-            <Button href="#programs" size="lg" showArrow>
+            <Button href="/programs" size="lg" showArrow>
               Explore Programs
             </Button>
-            <Button href="#contact" variant="outline" size="lg">
+            <Button href="/contact" variant="outline" size="lg">
               Talk to an Advisor
             </Button>
           </motion.div>

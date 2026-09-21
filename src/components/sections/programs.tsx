@@ -25,6 +25,7 @@ export function Programs() {
           {programs.map(program => (
             <StaggerItem key={program.slug}>
               <ProgramCard
+                slug={program.slug}
                 title={program.title}
                 description={program.description}
                 duration={program.duration}
@@ -40,12 +41,14 @@ export function Programs() {
 }
 
 function ProgramCard({
+  slug,
   title,
   description,
   duration,
   level,
   category,
 }: {
+  slug: string;
   title: string;
   description: string;
   duration: string;
@@ -54,7 +57,7 @@ function ProgramCard({
 }) {
   return (
     <motion.a
-      href="#contact"
+      href={`/programs/${slug}`}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex h-full flex-col justify-between gap-6 rounded-2xl border border-border bg-surface p-7 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-colors duration-300 hover:border-primary/30"
