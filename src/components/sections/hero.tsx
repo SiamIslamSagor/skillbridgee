@@ -5,6 +5,7 @@ import { type PointerEvent, useRef } from "react";
 import { MessageCircle, Sparkles, TrendingUp } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { TextReveal } from "@/components/motion/reveal";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -56,41 +57,32 @@ export function Hero() {
 
       <Container className="relative grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="flex flex-col items-start gap-7">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE }}
+          <TextReveal
+            delay={0.05}
             className="rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary"
           >
             Build Skills. Build Your Future.
-          </motion.span>
+          </TextReveal>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
-            className="text-balance text-[clamp(2.5rem,6vw,4.25rem)] font-semibold leading-[1.05] tracking-tight text-foreground"
-          >
-            Where ambition
-            <br />
-            meets <span className="text-primary">opportunity.</span>
-          </motion.h1>
+          <TextReveal delay={0.1} className="w-full">
+            <h1 className="text-balance text-[clamp(2.5rem,6vw,4.25rem)] font-semibold leading-[1.05] tracking-tight text-foreground">
+              Where ambition
+              <br />
+              meets <span className="text-primary">opportunity.</span>
+            </h1>
+          </TextReveal>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.16, ease: EASE }}
+          <TextReveal
+            delay={0.18}
             className="max-w-xl text-balance text-[clamp(1rem,1.4vw,1.2rem)] leading-relaxed text-muted-foreground"
           >
             SkillBridge helps ambitious learners gain practical, job-ready
             skills through mentor-led programs, real-world projects, and
             dedicated career support.
-          </motion.p>
+          </TextReveal>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.24, ease: EASE }}
+          <TextReveal
+            delay={0.24}
             className="flex flex-wrap items-center gap-4"
           >
             <Button href="/programs" size="lg" showArrow>
@@ -99,7 +91,7 @@ export function Hero() {
             <Button href="/contact" variant="outline" size="lg">
               Talk to an Advisor
             </Button>
-          </motion.div>
+          </TextReveal>
         </div>
 
         <motion.div
