@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { usePreloaderReady } from "@/lib/preloader-context";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -10,9 +11,26 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const preloaderReady = usePreloaderReady();
+  // Tracks whether we've already done the initial preloader -> content swap,
+  // so that first swap skips the fade-in and reveals fire immediately.
+  const [hasRevealed, setHasRevealed] = useState(false);
+  const isFirstReveal = preloaderReady && !hasRevealed;
+  if (isFirstReveal) setHasRevealed(true);
 
   if (prefersReducedMotion) {
     return <>{children}</>;
+  }
+
+  if (!preloaderReady) {
+    // Render plain (no motion wrapper) while hidden behind the preloader, so
+    // there's nothing to exit-animate once it's time to reveal the page.
+    return (
+      <>
+        <TopProgressBar pathname={pathname} />
+        {children}
+      </>
+    );
   }
 
   return (
@@ -21,7 +39,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={pathname}
-          initial={{ opacity: 0, y: 20 }}
+          initial={isFirstReveal ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.5, ease: EASE }}

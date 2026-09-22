@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { useMarkPreloaderReady } from "@/lib/preloader-context";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -12,6 +13,7 @@ export function Preloader() {
   // Assume loading by default so the server-rendered markup matches a fresh visit.
   const [isLoading, setIsLoading] = useState(true);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const markReady = useMarkPreloaderReady();
   // Cached across React Strict Mode's dev-only double effect invocation so the
   // sessionStorage write on the first run doesn't shorten the delay on the second.
   const isFirstLoadRef = useRef<boolean | null>(null);
@@ -29,7 +31,7 @@ export function Preloader() {
   }, []);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={markReady}>
       {isLoading ? (
         <motion.div
           className="fixed inset-0 z-200000000000000000 flex items-center justify-center bg-dark"
