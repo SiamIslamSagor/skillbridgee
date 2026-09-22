@@ -14,15 +14,15 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <PageShell>
-      <section className="bg-dark pb-24 pt-36 text-white sm:pb-28 sm:pt-44">
+      <section className="bg-background pb-24 pt-36 sm:pb-28 sm:pt-44">
         <Container>
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/90">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             About SkillBridge
           </span>
-          <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.03] tracking-tight">
+          <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.03] tracking-tight text-foreground">
             Education should move you somewhere.
           </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-white/65">
+          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             SkillBridge exists to make high-quality, practical education more
             accessible to people ready to build a different future.
           </p>

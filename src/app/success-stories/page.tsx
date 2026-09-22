@@ -13,15 +13,15 @@ export const metadata = {
 export default function SuccessStoriesPage() {
   return (
     <PageShell>
-      <section className="bg-dark pb-20 pt-36 text-white sm:pb-24 sm:pt-44">
+      <section className="bg-background pb-20 pt-36 sm:pb-24 sm:pt-44">
         <Container>
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/90">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             Student success stories
           </span>
-          <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.03] tracking-tight">
+          <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.03] tracking-tight text-foreground">
             New skills are powerful when they open new doors.
           </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-white/65">
+          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             These are a few of the learners who used SkillBridge to move from
             possibility to progress.
           </p>
