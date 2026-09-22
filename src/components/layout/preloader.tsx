@@ -20,7 +20,7 @@ export function Preloader() {
     <AnimatePresence>
       {isLoading ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-dark"
+          className="fixed inset-0 z-200000000000000000 flex items-center justify-center bg-dark"
           initial={{ opacity: 1 }}
           exit={{
             y: "-100%",
