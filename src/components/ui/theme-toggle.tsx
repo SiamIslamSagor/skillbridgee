@@ -12,7 +12,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <IconButton
       variant="ghost"
-      className={cn(className)}
+      className={cn(className, "cursor-pointer")}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       onClick={toggleTheme}
     >
