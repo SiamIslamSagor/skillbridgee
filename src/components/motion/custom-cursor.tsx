@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { INTERACTIVE_SELECTOR } from "@/lib/cursor/constants";
 import { useCursorCapability } from "@/lib/cursor/use-cursor-capability";
@@ -24,6 +25,7 @@ const SCALE_SPRING = { stiffness: 320, damping: 16, mass: 0.4 };
  */
 export function CustomCursor() {
   const enabled = useCursorCapability();
+  const pathname = usePathname();
   const ringRef = useRef<HTMLDivElement>(null);
 
   const pointerX = useMotionValue(0);
@@ -38,6 +40,15 @@ export function CustomCursor() {
 
   const isHovering = useRef(false);
   const isPressed = useRef(false);
+
+  // Route changes unmount the hovered element without a native pointerout,
+  // so force the ring back to its resting size until the pointer re-enters something.
+  useEffect(() => {
+    isHovering.current = false;
+    isPressed.current = false;
+    ringRef.current?.classList.remove("is-hover", "is-press");
+    scaleTarget.set(1);
+  }, [pathname, scaleTarget]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -69,6 +80,13 @@ export function CustomCursor() {
     const handlePointerMove = (event: PointerEvent) => {
       pointerX.set(event.clientX);
       pointerY.set(event.clientY);
+      // Resync hover state each move: guards against stale "on" state left
+      // behind when a hovered element is unmounted (e.g. page transitions)
+      // instead of actually being left by the pointer.
+      if (!isPressed.current) {
+        const target = event.target as Element | null;
+        setHover(!!target?.closest(INTERACTIVE_SELECTOR));
+      }
     };
 
     const onPointerOver = (event: PointerEvent) => {
