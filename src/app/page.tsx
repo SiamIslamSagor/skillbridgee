@@ -9,14 +9,12 @@ import { Results } from "@/components/sections/results";
 import { Testimonials } from "@/components/sections/testimonials";
 import { TrustStrip } from "@/components/sections/trust-strip";
 import { Navbar } from "@/components/layout/navbar";
-import { Preloader } from "@/components/layout/preloader";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { Footer } from "@/components/layout/footer";
 
 export default function Home() {
   return (
     <>
-      <Preloader />
       <ScrollProgress />
       <Navbar />
       <main>
