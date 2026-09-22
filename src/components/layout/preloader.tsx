@@ -1,76 +1,104 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMarkPreloaderReady } from "@/lib/preloader-context";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const DISPLAY_DURATION = 2000;
-const SESSION_KEY = "sb-preloader-shown";
+const DISPLAY_DURATION = 1800;
 
 export function Preloader() {
   // Assume loading by default so the server-rendered markup matches a fresh visit.
   const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
   const prefersReducedMotion = usePrefersReducedMotion();
   const markReady = useMarkPreloaderReady();
-  // Cached across React Strict Mode's dev-only double effect invocation so the
-  // sessionStorage write on the first run doesn't shorten the delay on the second.
-  const isFirstLoadRef = useRef<boolean | null>(null);
 
   useEffect(() => {
-    if (isFirstLoadRef.current === null) {
-      isFirstLoadRef.current = !sessionStorage.getItem(SESSION_KEY);
-      if (isFirstLoadRef.current) sessionStorage.setItem(SESSION_KEY, "1");
-    }
-    const timer = setTimeout(
-      () => setIsLoading(false),
-      isFirstLoadRef.current ? DISPLAY_DURATION : 0,
-    );
-    return () => clearTimeout(timer);
-  }, []);
+    const duration = prefersReducedMotion ? 0 : DISPLAY_DURATION;
+
+    let rafId: number;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const linear = duration <= 0 ? 1 : Math.min(elapsed / duration, 1);
+      // ease-out-ish so the counter settles rather than ticking uniformly
+      const eased = 1 - (1 - linear) ** 3;
+      setProgress(Math.round(eased * 100));
+      if (linear < 1) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        setIsLoading(false);
+      }
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [prefersReducedMotion]);
 
   return (
     <AnimatePresence onExitComplete={markReady}>
       {isLoading ? (
         <motion.div
-          className="fixed inset-0 z-200000000000000000 flex items-center justify-center bg-dark"
-          initial={{ opacity: 1 }}
+          className="fixed inset-0 z-100000 flex items-center justify-center overflow-hidden bg-dark"
+          initial={{ clipPath: "inset(0% 0 0% 0)" }}
           exit={{
-            y: "-100%",
-            transition: { duration: 0.8, ease: EASE, delay: 2 },
+            clipPath: "inset(0% 0 100% 0)",
+            transition: { duration: 0.9, ease: EASE },
           }}
         >
-          <div className="flex flex-col items-center gap-6">
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(255,102,0,0.14),transparent_60%)]"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.06]"
+            aria-hidden="true"
+          />
+
+          <motion.div
+            className="relative flex flex-col items-center gap-10"
+            exit={{
+              opacity: 0,
+              scale: 0.94,
+              filter: "blur(8px)",
+              transition: { duration: 0.4, ease: EASE },
+            }}
+          >
             <motion.div
-              className="flex items-center gap-3"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 16, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{
-                duration: prefersReducedMotion ? 0 : 0.5,
+                duration: prefersReducedMotion ? 0 : 0.7,
                 ease: EASE,
               }}
             >
-              <Logo />
+              <Logo className="w-44 sm:w-56" />
             </motion.div>
-            <div className="h-px w-40 overflow-hidden bg-white/10">
-              <motion.div
-                className="h-full bg-primary"
-                initial={{ x: "-100%" }}
-                animate={{ x: "0%" }}
-                transition={{ duration: 1, ease: EASE }}
-              />
+
+            <div className="flex w-56 flex-col items-center gap-3 sm:w-64">
+              <div className="h-px w-full overflow-hidden bg-white/10">
+                <motion.div
+                  className="h-full origin-left bg-primary"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: progress / 100 }}
+                  transition={{ duration: 0.15, ease: "linear" }}
+                />
+              </div>
+              <span className="font-mono text-xs tracking-[0.3em] text-white/40 tabular-nums">
+                {String(progress).padStart(2, "0")}%
+              </span>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       ) : null}
     </AnimatePresence>
   );
 }
 
-export const Logo = () => {
+export const Logo = ({ className = "w-48" }: { className?: string }) => {
   return (
-    <div className="min-w-48 ">
+    <div className={className}>
       <svg
         version="1.1"
         id="Layer_1"
@@ -80,6 +108,7 @@ export const Logo = () => {
         y="0px"
         viewBox="0 0 249.02 71.98"
         xmlSpace="preserve"
+        className="h-auto w-full"
       >
         <g>
           <rect x="0.22" y="0" width="99.88" height="51.79" fill="#333399" />

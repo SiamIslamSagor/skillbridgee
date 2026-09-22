@@ -5,6 +5,7 @@ import { useState } from "react";
 import { footerLinks, socialLinks } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { Logo } from "./preloader";
 
 export function Footer() {
   const [subscribed, setSubscribed] = useState(false);
@@ -18,14 +19,8 @@ export function Footer() {
       <Container className="relative py-16 sm:py-20">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="flex flex-col gap-4">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-lg font-semibold tracking-tight text-white"
-            >
-              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-                SB
-              </span>
-              SkillBridge
+            <Link href="/" className="flex w-fit items-center">
+              <Logo className="w-40" />
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-white/60">
               Bridging the gap between learning and opportunity, one practical

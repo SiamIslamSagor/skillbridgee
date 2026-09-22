@@ -46,7 +46,7 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground"
             >
-              <Logo/>
+              <Logo className="w-36 sm:w-40" />
             </Link>
 
             <ul className="hidden items-center gap-8 md:flex">
@@ -102,7 +102,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
       aria-label="Mobile navigation"
     >
       <Container className="flex items-center justify-between py-6">
-        <span className="text-lg font-semibold">SkillBridge</span>
+        <Logo className="w-32" />
         <IconButton
           variant="ghost"
           className="text-white hover:bg-white/10 hover:text-white"
