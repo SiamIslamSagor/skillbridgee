@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { navLinks } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { Button, IconButton } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -60,20 +61,23 @@ export function Navbar() {
               ))}
             </ul>
 
-            <div className="hidden md:block">
+            <div className="hidden items-center gap-2 md:flex">
+              <ThemeToggle />
               <Button href="/contact" size="sm" variant={"arrow"}>
                 Get Started
               </Button>
             </div>
 
-            <IconButton
-              className="md:hidden"
-              aria-label="Open menu"
-              aria-expanded={isMobileOpen}
-              onClick={() => setIsMobileOpen(true)}
-            >
-              <Menu className="size-6" aria-hidden="true" />
-            </IconButton>
+            <div className="flex items-center gap-2 md:hidden">
+              <ThemeToggle />
+              <IconButton
+                aria-label="Open menu"
+                aria-expanded={isMobileOpen}
+                onClick={() => setIsMobileOpen(true)}
+              >
+                <Menu className="size-6" aria-hidden="true" />
+              </IconButton>
+            </div>
           </nav>
         </Container>
       </header>

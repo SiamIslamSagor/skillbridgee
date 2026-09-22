@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f8fafc;
   --foreground: #0b1220;
@@ -14,6 +16,16 @@
   --border: rgba(15, 23, 42, 0.08);
   --border-dark: rgba(248, 250, 252, 0.12);
   --radius: 1rem;
+}
+
+.dark {
+  --background: #0b1220;
+  --foreground: #f8fafc;
+  --surface: #101a2e;
+  --primary: #3b82f6;
+  --muted: #94a3b8;
+  --muted-foreground: #cbd5e1;
+  --border: rgba(248, 250, 252, 0.1);
 }
 
 @theme inline {
@@ -37,6 +49,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-feature-settings: "cv11", "ss01";
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .container-page {
