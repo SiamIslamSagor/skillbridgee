@@ -1,60 +1,83 @@
 "use client";
 
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 import { INTERACTIVE_SELECTOR } from "@/lib/cursor/constants";
 import { magneticEngine } from "@/lib/cursor/magnetic-engine";
-import { pointerTracker } from "@/lib/cursor/pointer-tracker";
-import { stepSpring, type SpringState } from "@/lib/cursor/spring";
 import { useCursorCapability } from "@/lib/cursor/use-cursor-capability";
 
 const RING_SIZE = 36;
 const RING_HOVER_SCALE = 1.8;
 const RING_PRESS_SCALE = RING_HOVER_SCALE * 0.85;
 
-const DOT_STIFFNESS = 0.22;
-const DOT_DAMPING = 0.78;
-const RING_STIFFNESS = 0.12;
-const RING_DAMPING = 0.82;
-const SCALE_STIFFNESS = 0.32;
-const SCALE_DAMPING = 0.72;
+// Dot: tight and responsive — just enough smoothing to remove micro-jitter.
+const DOT_SPRING = { stiffness: 700, damping: 40, mass: 0.35 };
+// Ring: floaty trailing spring for the premium "follows the dot" feel.
+const RING_SPRING = { stiffness: 110, damping: 16, mass: 0.7 };
+// Scale: bouncier spring so hover/press transitions feel elastic.
+const SCALE_SPRING = { stiffness: 320, damping: 16, mass: 0.4 };
 
 /**
- * Awwwards-style custom cursor: a fixed dot + trailing ring, both driven by
- * a single rAF loop using spring interpolation (no per-frame React state).
+ * Awwwards-style custom cursor: a fixed dot + trailing ring built on top of
+ * the project's existing `motion` springs (no React state per frame — the
+ * raw pointer position and hover/press target feed motion values directly).
  * Renders nothing on touch/coarse-pointer devices or with reduced motion.
  */
 export function CustomCursor() {
   const enabled = useCursorCapability();
-  const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
 
-  const dotX = useRef<SpringState>({ value: 0, velocity: 0 });
-  const dotY = useRef<SpringState>({ value: 0, velocity: 0 });
-  const ringX = useRef<SpringState>({ value: 0, velocity: 0 });
-  const ringY = useRef<SpringState>({ value: 0, velocity: 0 });
-  const ringScale = useRef<SpringState>({ value: 1, velocity: 0 });
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const dotX = useSpring(pointerX, DOT_SPRING);
+  const dotY = useSpring(pointerY, DOT_SPRING);
+  const ringX = useSpring(pointerX, RING_SPRING);
+  const ringY = useSpring(pointerY, RING_SPRING);
+
+  const scaleTarget = useMotionValue(1);
+  const ringScale = useSpring(scaleTarget, SCALE_SPRING);
 
   const isHovering = useRef(false);
   const isPressed = useRef(false);
-  const prevHoverClass = useRef(false);
-  const prevPressClass = useRef(false);
 
   useEffect(() => {
     if (!enabled) return;
 
-    pointerTracker.acquire();
     magneticEngine.start();
     magneticEngine.setEnabled(true);
 
-    const resetHoverFromPoint = () => {
-      const el = document.elementFromPoint(pointerTracker.x, pointerTracker.y);
-      isHovering.current = !!el?.closest(INTERACTIVE_SELECTOR);
+    const applyScaleTarget = () => {
+      scaleTarget.set(
+        isPressed.current
+          ? RING_PRESS_SCALE
+          : isHovering.current
+            ? RING_HOVER_SCALE
+            : 1,
+      );
+    };
+
+    const setHover = (value: boolean) => {
+      if (isHovering.current === value) return;
+      isHovering.current = value;
+      ringRef.current?.classList.toggle("is-hover", value);
+      applyScaleTarget();
+    };
+
+    const setPressed = (value: boolean) => {
+      if (isPressed.current === value) return;
+      isPressed.current = value;
+      ringRef.current?.classList.toggle("is-press", value);
+      applyScaleTarget();
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      pointerX.set(event.clientX);
+      pointerY.set(event.clientY);
     };
 
     const onPointerOver = (event: PointerEvent) => {
       const target = event.target as Element | null;
-      if (target?.closest(INTERACTIVE_SELECTOR)) isHovering.current = true;
+      if (target?.closest(INTERACTIVE_SELECTOR)) setHover(true);
     };
 
     const onPointerOut = (event: PointerEvent) => {
@@ -62,20 +85,24 @@ export function CustomCursor() {
       const target = event.target as Element | null;
       if (!target?.closest(INTERACTIVE_SELECTOR)) return;
       const related = event.relatedTarget as Element | null;
-      if (!related?.closest(INTERACTIVE_SELECTOR)) isHovering.current = false;
+      if (!related?.closest(INTERACTIVE_SELECTOR)) setHover(false);
     };
 
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Element | null;
-      if (target?.closest(INTERACTIVE_SELECTOR)) isPressed.current = true;
+      if (target?.closest(INTERACTIVE_SELECTOR)) setPressed(true);
     };
 
     const onPointerRelease = () => {
       if (!isPressed.current) return;
-      isPressed.current = false;
-      resetHoverFromPoint();
+      setPressed(false);
+      const el = document.elementFromPoint(pointerX.get(), pointerY.get());
+      setHover(!!el?.closest(INTERACTIVE_SELECTOR));
     };
 
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
     document.addEventListener("pointerover", onPointerOver, { passive: true });
     document.addEventListener("pointerout", onPointerOut, { passive: true });
     document.addEventListener("pointerdown", onPointerDown, { passive: true });
@@ -85,49 +112,9 @@ export function CustomCursor() {
     });
     window.addEventListener("blur", onPointerRelease);
 
-    const loop = () => {
-      rafRef.current = requestAnimationFrame(loop);
-      const { x, y } = pointerTracker;
-
-      stepSpring(dotX.current, x, DOT_STIFFNESS, DOT_DAMPING);
-      stepSpring(dotY.current, y, DOT_STIFFNESS, DOT_DAMPING);
-      stepSpring(ringX.current, x, RING_STIFFNESS, RING_DAMPING);
-      stepSpring(ringY.current, y, RING_STIFFNESS, RING_DAMPING);
-
-      const targetScale = isPressed.current
-        ? RING_PRESS_SCALE
-        : isHovering.current
-          ? RING_HOVER_SCALE
-          : 1;
-      stepSpring(
-        ringScale.current,
-        targetScale,
-        SCALE_STIFFNESS,
-        SCALE_DAMPING,
-      );
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${dotX.current.value.toFixed(2)}px, ${dotY.current.value.toFixed(2)}px, 0) translate(-50%, -50%)`;
-      }
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ringX.current.value.toFixed(2)}px, ${ringY.current.value.toFixed(2)}px, 0) translate(-50%, -50%) scale(${ringScale.current.value.toFixed(3)})`;
-
-        if (prevHoverClass.current !== isHovering.current) {
-          ringRef.current.classList.toggle("is-hover", isHovering.current);
-          prevHoverClass.current = isHovering.current;
-        }
-        if (prevPressClass.current !== isPressed.current) {
-          ringRef.current.classList.toggle("is-press", isPressed.current);
-          prevPressClass.current = isPressed.current;
-        }
-      }
-    };
-    rafRef.current = requestAnimationFrame(loop);
-
     return () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      pointerTracker.release();
       magneticEngine.setEnabled(false);
+      window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("pointerover", onPointerOver);
       document.removeEventListener("pointerout", onPointerOut);
       document.removeEventListener("pointerdown", onPointerDown);
@@ -135,18 +122,28 @@ export function CustomCursor() {
       window.removeEventListener("pointercancel", onPointerRelease);
       window.removeEventListener("blur", onPointerRelease);
     };
-  }, [enabled]);
+  }, [enabled, pointerX, pointerY, scaleTarget]);
 
   if (!enabled) return null;
 
   return (
     <>
-      <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
-      <div
-        ref={ringRef}
-        className="cursor-ring"
+      <motion.div
+        className="cursor-dot -translate-x-1/2 -translate-y-1/2"
+        style={{ x: dotX, y: dotY }}
         aria-hidden="true"
-        style={{ width: RING_SIZE, height: RING_SIZE }}
+      />
+      <motion.div
+        ref={ringRef}
+        className="cursor-ring -translate-x-1/2 -translate-y-1/2"
+        style={{
+          x: ringX,
+          y: ringY,
+          scale: ringScale,
+          width: RING_SIZE,
+          height: RING_SIZE,
+        }}
+        aria-hidden="true"
       />
     </>
   );
