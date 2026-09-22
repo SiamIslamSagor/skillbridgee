@@ -14,6 +14,7 @@ import { navLinks } from "@/lib/data";
 import { Container } from "@/components/ui/container";
 import { Button, IconButton } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Logo } from "./preloader";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -45,10 +46,7 @@ export function Navbar() {
               href="/"
               className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground"
             >
-              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-                SB
-              </span>
-              SkillBridge
+              <Logo/>
             </Link>
 
             <ul className="hidden items-center gap-8 md:flex">
