@@ -137,11 +137,7 @@ export function Button({
 
   if (!magnetic) return inner;
 
-  return (
-    <Magnetic className="inline-flex" strength={0.25}>
-      {inner}
-    </Magnetic>
-  );
+  return <Magnetic className="inline-flex">{inner}</Magnetic>;
 }
 
 type IconButtonProps = CommonProps &

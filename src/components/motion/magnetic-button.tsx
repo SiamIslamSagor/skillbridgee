@@ -1,51 +1,37 @@
-"use client";
-
-import { motion, useMotionValue, useSpring } from "motion/react";
-import { type PointerEvent, type ReactNode, useRef } from "react";
-import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
+import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 type MagneticProps = {
   children: ReactNode;
   className?: string;
+  /** How strongly the element is pulled toward the pointer (0-1). */
   strength?: number;
+  /** Distance in px at which attraction begins. */
+  radius?: number;
+  /** Maximum displacement in px, regardless of pointer distance. */
+  maxDisplacement?: number;
 };
 
+/**
+ * Marks an element as magnetic. All animation is handled globally by the
+ * magnetic engine (see src/lib/cursor/magnetic-engine.ts), which auto-detects
+ * any `.magnetic` element in the DOM — no per-instance JS runs here.
+ */
 export function Magnetic({
   children,
   className,
-  strength = 0.35,
+  strength,
+  radius,
+  maxDisplacement,
 }: MagneticProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 300, damping: 20, mass: 0.4 });
-  const springY = useSpring(y, { stiffness: 300, damping: 20, mass: 0.4 });
-
-  function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
-    if (prefersReducedMotion || event.pointerType === "touch") return;
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    const offsetX = event.clientX - (rect.left + rect.width / 2);
-    const offsetY = event.clientY - (rect.top + rect.height / 2);
-    x.set(offsetX * strength);
-    y.set(offsetY * strength);
-  }
-
-  function handlePointerLeave() {
-    x.set(0);
-    y.set(0);
-  }
-
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      style={{ x: springX, y: springY }}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+    <div
+      className={cn("magnetic inline-flex", className)}
+      data-magnetic-strength={strength}
+      data-magnetic-radius={radius}
+      data-magnetic-max={maxDisplacement}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
