@@ -3,7 +3,6 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 import { INTERACTIVE_SELECTOR } from "@/lib/cursor/constants";
-import { magneticEngine } from "@/lib/cursor/magnetic-engine";
 import { useCursorCapability } from "@/lib/cursor/use-cursor-capability";
 
 const RING_SIZE = 36;
@@ -42,9 +41,6 @@ export function CustomCursor() {
 
   useEffect(() => {
     if (!enabled) return;
-
-    magneticEngine.start();
-    magneticEngine.setEnabled(true);
 
     const applyScaleTarget = () => {
       scaleTarget.set(
@@ -113,7 +109,6 @@ export function CustomCursor() {
     window.addEventListener("blur", onPointerRelease);
 
     return () => {
-      magneticEngine.setEnabled(false);
       window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("pointerover", onPointerOver);
       document.removeEventListener("pointerout", onPointerOut);

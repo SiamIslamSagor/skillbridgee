@@ -152,7 +152,6 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           size="lg"
           className="w-full"
           onClick={onClose}
-          magnetic={false}
         >
           Get Started
         </Button>

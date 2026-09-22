@@ -9,7 +9,6 @@ import type {
   ReactNode,
 } from "react";
 import { cn } from "@/lib/utils";
-import { Magnetic } from "@/components/motion/magnetic-button";
 
 const buttonVariants = cva(
   "group relative inline-flex min-h-11 items-center justify-center gap-2 overflow-hidden rounded-full text-sm font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45",
@@ -53,7 +52,6 @@ type CommonProps = VariantProps<typeof buttonVariants> & {
   icon?: ReactNode;
   iconOnly?: boolean;
   showArrow?: boolean;
-  magnetic?: boolean;
   loading?: boolean;
   disabled?: boolean;
 };
@@ -71,7 +69,6 @@ export function Button({
   variant,
   size,
   showArrow = false,
-  magnetic = false,
   loading = false,
   icon,
   iconOnly = false,
@@ -135,9 +132,7 @@ export function Button({
     </button>
   );
 
-  if (!magnetic) return inner;
-
-  return <Magnetic className="inline-flex">{inner}</Magnetic>;
+  return inner;
 }
 
 type IconButtonProps = CommonProps &
