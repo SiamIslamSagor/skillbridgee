@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { CustomCursor } from "@/components/motion/custom-cursor";
+import { PageTransition } from "@/components/layout/page-transition";
 import { ThemeProvider, themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
@@ -50,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <CustomCursor />
-          {children}
+          <PageTransition>{children}</PageTransition>
         </ThemeProvider>
       </body>
     </html>
