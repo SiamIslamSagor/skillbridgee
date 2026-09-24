@@ -26,7 +26,7 @@ export function Testimonials() {
       className="relative overflow-hidden bg-dark py-24 text-white sm:py-28"
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(37,99,235,0.18),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(255,102,0,0.2),transparent)]"
         aria-hidden="true"
       />
       <Container className="relative">

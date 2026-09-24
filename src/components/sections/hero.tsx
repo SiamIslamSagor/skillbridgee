@@ -85,7 +85,7 @@ export function Hero() {
             delay={0.24}
             className="flex flex-wrap items-center gap-4"
           >
-            <Button href="/programs" size="lg" showArrow>
+            <Button href="/programs" size="lg" showArrow className="text-white">
               Explore Programs
             </Button>
             <Button href="/contact" variant="outline" size="lg">
@@ -175,7 +175,7 @@ function HeroVisual({
         className="absolute -bottom-8 -left-10 hidden w-52 rounded-xl border border-border bg-surface p-4 shadow-[0_20px_50px_-25px_rgba(15,23,42,0.4)] sm:block"
       >
         <div className="flex items-center gap-2">
-          <span className="flex size-8 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+          <span className="flex size-8 items-center justify-center rounded-full bg-accent/15 text-accent">
             <TrendingUp className="size-4" aria-hidden="true" />
           </span>
           <p className="text-xs font-semibold text-foreground">

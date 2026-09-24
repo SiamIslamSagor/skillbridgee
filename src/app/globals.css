@@ -3,29 +3,34 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0b1220;
+  --background: #ffffff;
+  --foreground: #0d0d0f;
   --surface: #ffffff;
-  --dark: #0b1220;
-  --dark-elevated: #101a2e;
-  --primary: #2563eb;
-  --primary-foreground: #f8fafc;
-  --secondary: #6366f1;
-  --muted: #64748b;
-  --muted-foreground: #475569;
-  --border: rgba(15, 23, 42, 0.08);
-  --border-dark: rgba(248, 250, 252, 0.12);
+  --dark: #0d0d0f;
+  --dark-elevated: #17171d;
+  --primary: #ff6600;
+  --primary-foreground: #1a0d00;
+  --secondary: #ff8c3d;
+  --accent: #333399;
+  --accent-foreground: #ffffff;
+  --muted: #6b7280;
+  --muted-foreground: #45464b;
+  --border: rgba(13, 13, 15, 0.08);
+  --border-dark: rgba(255, 255, 255, 0.12);
   --radius: 1rem;
 }
 
 .dark {
-  --background: #0b1220;
-  --foreground: #f8fafc;
-  --surface: #101a2e;
-  --primary: #3b82f6;
-  --muted: #94a3b8;
-  --muted-foreground: #cbd5e1;
-  --border: rgba(248, 250, 252, 0.1);
+  --background: #0d0d0f;
+  --foreground: #f7f7f8;
+  --surface: #17171d;
+  --primary: #ff7a1f;
+  --secondary: #ffab6b;
+  --accent: #6666cc;
+  --accent-foreground: #ffffff;
+  --muted: #9a9aa2;
+  --muted-foreground: #d1d1d6;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -37,6 +42,8 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
@@ -137,7 +144,7 @@ body {
 
 .cursor-ring {
   border-radius: 50%;
-  border: 1.5px solid rgba(37, 99, 235, 0.55);
+  border: 1.5px solid rgba(255, 102, 0, 0.55);
   background: transparent;
   transition:
     background-color 0.35s ease,
@@ -145,13 +152,13 @@ body {
 }
 
 .cursor-ring.is-hover {
-  border-color: rgba(37, 99, 235, 0.85);
-  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(51, 51, 153, 0.85);
+  background: rgba(51, 51, 153, 0.08);
 }
 
 .cursor-ring.is-press {
   border-color: var(--primary);
-  background: rgba(37, 99, 235, 0.14);
+  background: rgba(255, 102, 0, 0.14);
 }
 
 @media (pointer: coarse), (hover: none) {
